@@ -4,25 +4,21 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
-public class Craft {
+public class Car {
 
 	private int dx;
 	private int dy;
 	private int x;
 	private int y;
 	private Image image;
+	private int playerId;
 
-	public Craft() {
-
-		initCraft();
-	}
-
-	private void initCraft() {
-
+	public Car(int playerId, int intialX, int initialy) {
+		this.playerId = playerId;
+		this.x = intialX;
+		this.y = initialy;
 		ImageIcon ii = new ImageIcon("car.png");
 		image = ii.getImage();
-		x = 40;
-		y = 60;
 	}
 
 	public void move() {
@@ -83,4 +79,10 @@ public class Craft {
 			dy = 0;
 		}
 	}
+
+	public int getPlayerId() {
+		return playerId;
+	}
+
+	
 }

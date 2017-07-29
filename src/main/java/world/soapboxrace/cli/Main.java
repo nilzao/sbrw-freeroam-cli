@@ -16,12 +16,11 @@ public class Main extends JFrame {
 	}
 
 	private void initUI() {
-		add(new Board());
-
+		Board board = new Board(1);
+		add(board);
 		setSize(400, 300);
 		setResizable(false);
-
-		setTitle("Moving sprite");
+		setTitle("SBRW - Freeroam Tests");
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
