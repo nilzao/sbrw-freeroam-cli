@@ -23,14 +23,13 @@ public class Main extends JFrame {
 		setTitle("SBRW - Freeroam Tests");
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		new Sender();
 	}
 
 	public static void main(String[] args) {
-
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-
 				Main ex = new Main();
 				ex.setVisible(true);
 			}

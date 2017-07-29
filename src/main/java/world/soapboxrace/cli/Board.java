@@ -24,7 +24,7 @@ public class Board extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -4341997790459453857L;
 	private Timer timer;
 	private Map<Integer, Car> cars = new HashMap<>();
-	Car playerCar;
+	private static Car playerCar;
 	private int currentPlayer = 2;
 	private final int DELAY = 10;
 
@@ -80,4 +80,9 @@ public class Board extends JPanel implements ActionListener {
 			playerCar.keyPressed(e);
 		}
 	}
+
+	public static Car getPlayerCar() {
+		return playerCar;
+	}
+
 }
