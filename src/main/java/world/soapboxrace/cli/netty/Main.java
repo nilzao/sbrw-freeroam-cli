@@ -3,11 +3,9 @@ package world.soapboxrace.cli.netty;
 import java.awt.EventQueue;
 import java.net.InetSocketAddress;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.socket.DatagramPacket;
-import io.netty.util.CharsetUtil;
 import world.soapboxrace.cli.MainBoard;
 
 public class Main {

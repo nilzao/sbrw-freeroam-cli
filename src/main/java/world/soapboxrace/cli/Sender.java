@@ -4,6 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import world.soapboxrace.cli.netty.Main;
 import world.soapboxrace.debug.UdpDebug;
 
 public class Sender implements Runnable {
@@ -12,7 +13,7 @@ public class Sender implements Runnable {
 
 	public Sender() {
 		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-		executor.scheduleWithFixedDelay(this, 50L, 5000L, TimeUnit.MILLISECONDS);
+		executor.scheduleWithFixedDelay(this, 5000L, 5000L, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -29,6 +30,7 @@ public class Sender implements Runnable {
 			carProtocol2.deserialize(serialize);
 			System.out.println("carProtocol: " + carProtocol2.getPlayerId() + "-> [" + carProtocol2.getX() + "]/[" + carProtocol2.getY() + "]");
 			System.out.println(UdpDebug.byteArrayToHexString(serialize));
+			Main.send(serialize);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
