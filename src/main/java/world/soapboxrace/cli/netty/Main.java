@@ -12,6 +12,9 @@ import world.soapboxrace.cli.MainBoard;
 
 public class Main {
 
+	private static NettyUdpClient client;
+	private static InetSocketAddress remoteAddress;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -28,17 +31,16 @@ public class Main {
 			port = Integer.parseInt(args[1]);
 		}
 
-		InetSocketAddress remoteAddress = new InetSocketAddress(host, port);
+		remoteAddress = new InetSocketAddress(host, port);
 
-		NettyUdpClient client = new NettyUdpClient();
+		client = new NettyUdpClient();
 
 		try {
 			ChannelFuture channelFuture = client.start();
 
 			String text = "test";
 			System.out.println("Client sending message " + text + " to server");
-			ByteBuf byteBuf = Unpooled.copiedBuffer(text, CharsetUtil.UTF_8);
-			client.write(new DatagramPacket(byteBuf, remoteAddress));
+			send(text.getBytes());
 
 			// Wait until the connection is closed.
 			channelFuture.channel().closeFuture().sync();
@@ -47,5 +49,13 @@ public class Main {
 			System.err.println(ex.getMessage());
 		}
 
+	}
+
+	public static void send(byte[] bytes) {
+		try {
+			client.write(new DatagramPacket(Unpooled.copiedBuffer(bytes), remoteAddress));
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 }
