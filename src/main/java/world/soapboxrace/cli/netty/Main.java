@@ -7,11 +7,14 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.socket.DatagramPacket;
 import world.soapboxrace.cli.MainBoard;
+import world.soapboxrace.cli.Sender;
+import world.soapboxrace.cli.SenderState;
 
 public class Main {
 
 	private static NettyUdpClient client;
 	private static InetSocketAddress remoteAddress;
+	private static ChannelFuture channelFuture;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -34,15 +37,12 @@ public class Main {
 		client = new NettyUdpClient();
 
 		try {
-			ChannelFuture channelFuture = client.start();
-
+			channelFuture = client.start();
 			String text = "test";
 			System.out.println("Client sending message " + text + " to server");
 			send(text.getBytes());
-
 			// Wait until the connection is closed.
 			channelFuture.channel().closeFuture().sync();
-
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 		}
@@ -51,7 +51,12 @@ public class Main {
 
 	public static void send(byte[] bytes) {
 		try {
-			client.write(new DatagramPacket(Unpooled.copiedBuffer(bytes), remoteAddress));
+			if (channelFuture != null && channelFuture.isSuccess() && channelFuture.isDone()) {
+				if (SenderState.DISCONNECTED.equals(Sender.getSenderState())) {
+					Sender.setSenderState(SenderState.HELLO);
+				}
+				client.write(new DatagramPacket(Unpooled.copiedBuffer(bytes), remoteAddress));
+			}
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
