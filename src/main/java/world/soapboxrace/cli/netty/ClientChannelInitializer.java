@@ -10,6 +10,6 @@ public class ClientChannelInitializer extends ChannelInitializer<DatagramChannel
 		ChannelPipeline pipeline = ch.pipeline();
 		pipeline.addLast("hello", new HelloHandler());
 		pipeline.addLast("playerInfo", new PlayerInfoHandler());
-		pipeline.addLast("debug", new ExampleHandler());
+		// pipeline.addLast("debug", new ExampleHandler());
 	}
 }

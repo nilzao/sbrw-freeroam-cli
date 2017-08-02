@@ -9,8 +9,10 @@ public class MainBoard extends JFrame {
 	 */
 	private static final long serialVersionUID = 6347891214501660764L;
 
+	private static Board board;
+
 	public MainBoard(int playerId) {
-		Board board = new Board(playerId);
+		board = new Board(playerId);
 		add(board);
 		setSize(400, 300);
 		setResizable(false);
@@ -21,4 +23,7 @@ public class MainBoard extends JFrame {
 		new Sender();
 	}
 
+	public static void addUpdateCar(Car car) {
+		board.addCar(car);
+	}
 }
