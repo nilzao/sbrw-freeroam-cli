@@ -16,7 +16,7 @@ public class MainBoard extends JFrame {
 		add(board);
 		setSize(400, 300);
 		setResizable(false);
-		setTitle("SBRW - Freeroam Tests");
+		setTitle("SBRW - Freeroam Tests [" + playerId + "]");
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
