@@ -72,6 +72,9 @@ public class Board extends JPanel implements ActionListener {
 			if (key == KeyEvent.VK_0) {
 				addCar(new Car(currentPlayer++, playerCar.getX(), playerCar.getY()));
 			}
+			if (key == KeyEvent.VK_9) {
+				removeCar(--currentPlayer);
+			}
 			playerCar.keyReleased(e);
 		}
 
@@ -83,6 +86,10 @@ public class Board extends JPanel implements ActionListener {
 
 	public static Car getPlayerCar() {
 		return playerCar;
+	}
+
+	private void removeCar(int i) {
+		cars.remove(i);
 	}
 
 }

@@ -10,7 +10,6 @@ import world.soapboxrace.cli.CarProtocol;
 import world.soapboxrace.cli.MainBoard;
 import world.soapboxrace.cli.Sender;
 import world.soapboxrace.cli.SenderState;
-import world.soapboxrace.debug.UdpDebug;
 
 public class PlayerInfoHandler extends ChannelInboundHandlerAdapter {
 
@@ -39,8 +38,6 @@ public class PlayerInfoHandler extends ChannelInboundHandlerAdapter {
 			if (bytes.length > 0) {
 				CarProtocol carProtocol = new CarProtocol();
 				carProtocol.deserialize(bytes);
-				// System.out.println("PlayerInfo " + UdpDebug.byteArrayToHexString(ByteBufUtil.getBytes(readBytes)));
-				// System.out.println(carProtocol.getPlayerId() + "-> " + carProtocol.getX() + "/" + carProtocol.getY());
 				Car car = new Car(carProtocol.getPlayerId(), carProtocol.getX(), carProtocol.getY());
 				MainBoard.addUpdateCar(car);
 			}
