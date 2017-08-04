@@ -1,6 +1,5 @@
 package world.soapboxrace.cli;
 
-import world.soapboxrace.debug.UdpDebug;
 import world.soapboxrace.serialbyte.ByteField;
 import world.soapboxrace.serialbyte.SerialZebraBytePos;
 
@@ -58,13 +57,4 @@ public class CarProtocol extends SerialZebraBytePos {
 		return null;
 	}
 
-	@Override
-	public void deserialize(byte[] data) {
-		try {
-			super.deserialize(data);
-		} catch (Exception e) {
-			System.err.println("CarProtocol deserialize error!");
-			System.err.println(UdpDebug.byteArrayToHexString(data));
-		}
-	}
 }

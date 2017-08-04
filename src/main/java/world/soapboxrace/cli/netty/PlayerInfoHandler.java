@@ -14,6 +14,7 @@ import world.soapboxrace.cli.CarProtocol;
 import world.soapboxrace.cli.MainBoard;
 import world.soapboxrace.cli.Sender;
 import world.soapboxrace.cli.SenderState;
+import world.soapboxrace.debug.UdpDebug;
 
 public class PlayerInfoHandler extends ChannelInboundHandlerAdapter {
 
@@ -45,8 +46,14 @@ public class PlayerInfoHandler extends ChannelInboundHandlerAdapter {
 			byte[] bs = l.get(i);
 			if (bs.length > 0) {
 				CarProtocol carProtocol = new CarProtocol();
-				carProtocol.deserialize(bs);
-				MainBoard.addUpdateCar(i, new Car(carProtocol.getPlayerId(), carProtocol.getX(), carProtocol.getY()));
+				try {
+					carProtocol.deserialize(bs);
+					MainBoard.addUpdateCar(i, new Car(carProtocol.getPlayerId(), carProtocol.getX(), carProtocol.getY()));
+				} catch (Exception e) {
+					System.err.println("CarProtocol deserialize error!");
+					System.err.println(UdpDebug.byteArrayToHexString(bs));
+					System.err.println(UdpDebug.byteArrayToHexString(bytesTmp));
+				}
 			} else {
 				MainBoard.addUpdateCar(i, null);
 			}
