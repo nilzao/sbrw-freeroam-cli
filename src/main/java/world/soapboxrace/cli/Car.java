@@ -17,7 +17,8 @@ public class Car {
 		this.playerId = playerId;
 		this.x = intialX;
 		this.y = initialy;
-		ImageIcon ii = new ImageIcon("car.png");
+		int carNumber = playerId % 5;
+		ImageIcon ii = new ImageIcon("car-" + carNumber + ".png");
 		image = ii.getImage();
 	}
 
@@ -84,5 +85,4 @@ public class Car {
 		return playerId;
 	}
 
-	
 }
