@@ -8,10 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -23,14 +21,17 @@ public class Board extends JPanel implements ActionListener {
 	 */
 	private static final long serialVersionUID = -4341997790459453857L;
 	private Timer timer;
-	private Map<Integer, Car> cars = new HashMap<>();
+	private List<Car> cars = new LinkedList<>();
 	private static Car playerCar;
-	private int currentPlayer = 2;
+	private int currentPlayer = 0;
 	private final int DELAY = 10;
 
 	public Board(int playerId) {
 		playerCar = new Car(playerId, 40, 60);
-		cars.put(playerCar.getPlayerId(), playerCar);
+		cars.add(playerCar);
+		for (int i = 0; i < 4; i++) {
+			cars.add(null);
+		}
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		setBackground(Color.WHITE);
@@ -38,8 +39,8 @@ public class Board extends JPanel implements ActionListener {
 		timer.start();
 	}
 
-	public void addCar(Car car) {
-		cars.put(car.getPlayerId(), car);
+	public void addUpdateCar(int idx, Car car) {
+		cars.set(idx, car);
 	}
 
 	@Override
@@ -51,11 +52,10 @@ public class Board extends JPanel implements ActionListener {
 
 	private void doDrawing(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		Iterator<Entry<Integer, Car>> iterator = cars.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<Integer, Car> next = iterator.next();
-			Car carTmp = next.getValue();
-			g2d.drawImage(carTmp.getImage(), carTmp.getX(), carTmp.getY(), this);
+		for (Car car : cars) {
+			if (car != null) {
+				g2d.drawImage(car.getImage(), car.getX(), car.getY(), this);
+			}
 		}
 	}
 
@@ -70,10 +70,10 @@ public class Board extends JPanel implements ActionListener {
 		public void keyReleased(KeyEvent e) {
 			int key = e.getKeyCode();
 			if (key == KeyEvent.VK_0) {
-				addCar(new Car(currentPlayer++, playerCar.getX(), playerCar.getY()));
+				cars.add(++currentPlayer, new Car(currentPlayer, playerCar.getX(), playerCar.getY()));
 			}
 			if (key == KeyEvent.VK_9) {
-				removeCar(--currentPlayer);
+				removeCar(currentPlayer--);
 			}
 			playerCar.keyReleased(e);
 		}
@@ -89,7 +89,7 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private void removeCar(int i) {
-		cars.remove(i);
+		cars.set(i, null);
 	}
 
 }

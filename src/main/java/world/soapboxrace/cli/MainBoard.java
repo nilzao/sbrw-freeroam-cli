@@ -23,7 +23,8 @@ public class MainBoard extends JFrame {
 		new Sender();
 	}
 
-	public static void addUpdateCar(Car car) {
-		board.addCar(car);
+	public static void addUpdateCar(int idx, Car car) {
+		board.addUpdateCar(idx, car);
 	}
+
 }

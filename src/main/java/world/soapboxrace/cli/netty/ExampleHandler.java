@@ -14,7 +14,7 @@ public class ExampleHandler extends ChannelInboundHandlerAdapter {
 		DatagramPacket datagramPacket = (DatagramPacket) msg;
 		ByteBuf buf = datagramPacket.content();
 		String response = UdpDebug.byteArrayToHexString(ByteBufUtil.getBytes(buf));
-		System.out.println("Client received response " + response);
+		System.out.println("Client received response [" + response + "]");
 		super.channelRead(ctx, msg);
 	}
 

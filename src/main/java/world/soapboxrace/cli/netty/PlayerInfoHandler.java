@@ -1,5 +1,9 @@
 package world.soapboxrace.cli.netty;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,34 +23,35 @@ public class PlayerInfoHandler extends ChannelInboundHandlerAdapter {
 		ByteBuf buf = datagramPacket.content();
 		if (isPlayerInfoPacket(buf)) {
 			Sender.setSenderState(SenderState.INFO);
-			parsePlayers(buf);
+			byte[] bytes = ByteBufUtil.getBytes(buf);
+			splitParse(bytes);
 		}
 		super.channelRead(ctx, msg);
 	}
 
-	private int parse(ByteBuf buffer) {
-		buffer.readBytes(2);
-		return buffer.indexOf(buffer.readerIndex(), 999, (byte) 0xff);
-	}
-
-	private void process(ByteBuf buffer) {
-		buffer.setIndex(2, 999);
-		int indexOf = 0;
-		while ((indexOf = parse(buffer)) != -1) {
-			ByteBuf readBytes = buffer.readBytes(indexOf - buffer.readerIndex());
-			byte[] bytes = ByteBufUtil.getBytes(readBytes);
-			if (bytes.length > 0) {
-				CarProtocol carProtocol = new CarProtocol();
-				carProtocol.deserialize(bytes);
-				Car car = new Car(carProtocol.getPlayerId(), carProtocol.getX(), carProtocol.getY());
-				MainBoard.addUpdateCar(car);
+	private void splitParse(byte[] bytes) {
+		byte[] bytesTmp = bytes.clone();
+		List<byte[]> l = new LinkedList<>();
+		int blockStart = 0;
+		for (int i = 0; i < bytesTmp.length; i++) {
+			if (bytesTmp[i] == (byte) 0xff) {
+				l.add(Arrays.copyOfRange(bytesTmp, (blockStart + 1), i));
+				blockStart = i + 1;
+				i = blockStart;
 			}
 		}
-		buffer.setIndex(0, 0);
-	}
-
-	private void parsePlayers(ByteBuf buf) {
-		process(buf);
+		l.add(Arrays.copyOfRange(bytesTmp, blockStart, bytesTmp.length));
+		for (int i = 1; i < (l.size() - 1); i++) {
+			byte[] bs = l.get(i);
+			if (bs.length > 0) {
+				CarProtocol carProtocol = new CarProtocol();
+				carProtocol.deserialize(bs);
+				MainBoard.addUpdateCar(i, new Car(carProtocol.getPlayerId(), carProtocol.getX(), carProtocol.getY()));
+			} else {
+				MainBoard.addUpdateCar(i, null);
+			}
+		}
+		bytesTmp = null;
 	}
 
 	@Override
