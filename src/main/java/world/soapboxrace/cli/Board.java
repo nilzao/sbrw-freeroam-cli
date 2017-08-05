@@ -92,4 +92,8 @@ public class Board extends JPanel implements ActionListener {
 		cars.set(i, null);
 	}
 
+	public Car getCar(int i) {
+		return cars.get(i);
+	}
+
 }

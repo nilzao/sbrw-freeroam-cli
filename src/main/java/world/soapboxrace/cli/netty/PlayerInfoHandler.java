@@ -1,5 +1,6 @@
 package world.soapboxrace.cli.netty;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +45,11 @@ public class PlayerInfoHandler extends ChannelInboundHandlerAdapter {
 		l.add(Arrays.copyOfRange(bytesTmp, blockStart, bytesTmp.length));
 		for (int i = 1; i < (l.size() - 1); i++) {
 			byte[] bs = l.get(i);
-			if (bs.length > 0) {
+			if (bs.length == 4) {
+				short x = ByteBuffer.wrap(bs, 0, 2).asShortBuffer().get();
+				short y = ByteBuffer.wrap(bs, 2, 2).asShortBuffer().get();
+				MainBoard.updateCar(i, x, y);
+			} else if (bs.length == 6) {
 				CarProtocol carProtocol = new CarProtocol();
 				try {
 					carProtocol.deserialize(bs);
@@ -54,11 +59,16 @@ public class PlayerInfoHandler extends ChannelInboundHandlerAdapter {
 					System.err.println(UdpDebug.byteArrayToHexString(bs));
 					System.err.println(UdpDebug.byteArrayToHexString(bytesTmp));
 				}
+			} else if (bs.length > 0) {
+				System.err.println("CarProtocol deserialize error!");
+				System.err.println(UdpDebug.byteArrayToHexString(bs));
+				System.err.println(UdpDebug.byteArrayToHexString(bytesTmp));
 			} else {
 				MainBoard.addUpdateCar(i, null);
 			}
 		}
 		bytesTmp = null;
+
 	}
 
 	@Override

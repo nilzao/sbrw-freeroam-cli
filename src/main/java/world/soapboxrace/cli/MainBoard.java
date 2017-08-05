@@ -27,4 +27,13 @@ public class MainBoard extends JFrame {
 		board.addUpdateCar(idx, car);
 	}
 
+	public static void updateCar(int idx, int x, int y) {
+		Car car = board.getCar(idx);
+		if (car != null) {
+			car.setX(x);
+			car.setY(y);
+			board.addUpdateCar(idx, car);
+		}
+	}
+
 }
